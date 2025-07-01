@@ -33,7 +33,7 @@ const Page = async () => {
       </section>
       <section className="section">
         <h2 className="section-title">Recently completed sessions</h2>
-        <div className="recent-sessions-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        <div className="recent-sessions-grid">
           {recentSessionsCompanions.slice(0, 9).map((companion) => (
             <FlippableCompanionCard
               key={companion.id || companion.$id}
