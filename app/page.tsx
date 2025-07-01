@@ -1,0 +1,59 @@
+import CompanionCard from "@/components/CompanionCard";
+import CompanionsList from "@/components/CompanionsList";
+import CTA from "@/components/CTA";
+import {recentSessions} from "@/constants";
+import {getAllCompanions, getRecentSessions} from "@/lib/actions/companion.actions";
+import {getSubjectColor} from "@/lib/utils";
+import Link from "next/link";
+import ScrollReveal from "@/components/ScrollReveal";
+import FlippableCompanionCard from "@/components/FlippableCompanionCard";
+
+const Page = async () => {
+    const companions = await getAllCompanions({ limit: 3 });
+    const recentSessionsCompanions = await getRecentSessions(10) as any[];
+
+  return (
+    <main>
+      <section className="cta-section-top">
+        <CTA />
+      </section>
+      <section className="section">
+        <h1 className="section-title">Popular Companions</h1>
+        <div className="popular-companions-grid">
+          {companions.map((companion) => (
+            <FlippableCompanionCard
+              key={companion.id}
+              {...companion}
+              color={getSubjectColor(companion.subject)}
+              summary={`Learn about ${companion.topic} with ${companion.name}. This interactive session covers key concepts and provides hands-on practice in ${companion.subject}.`}
+            />
+          ))}
+        </div>
+      </section>
+      <section className="section">
+        <h2 className="section-title">Recently completed sessions</h2>
+        <ScrollReveal>
+          <div className="recent-sessions-grid">
+            {recentSessionsCompanions.slice(0, 8).map((companion) => (
+              <Link href={`/companions/${companion.id || companion.$id}`} key={companion.id || companion.$id} className="recent-session-card-link">
+                <div className="recent-session-card animate-on-scroll">
+                  <div className="session-card-content">
+                    <div className="session-avatar" style={{ backgroundColor: getSubjectColor(companion.subject) }}>
+                      <img src={`/icons/${companion.subject}.svg`} alt={companion.subject} width={40} height={40} />
+                    </div>
+                    <div className="session-info">
+                      <div className="session-name">{companion.name}</div>
+                      <div className="session-topic">{companion.topic}</div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </ScrollReveal>
+      </section>
+    </main>
+  )
+}
+
+export default Page
