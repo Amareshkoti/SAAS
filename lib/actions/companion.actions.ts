@@ -74,11 +74,26 @@ export const getRecentSessions = async (limit = 10) => {
         .from('session_history')
         .select(`companions:companion_id (*)`)
         .order('created_at', { ascending: false })
-        .limit(limit)
+        .limit(limit * 3); // fetch more to ensure enough unique
 
     if(error) throw new Error(error.message);
 
-    return data.map(({ companions }) => companions);
+    // Filter out duplicates by companion id
+    const seen = new Set<string>();
+    const uniqueCompanions: any[] = [];
+    if (Array.isArray(data)) {
+        for (const entry of data) {
+            const companions: any = entry?.companions;
+            if (!companions || typeof companions !== 'object' || Array.isArray(companions)) continue;
+            const id = companions.id || companions.$id;
+            if (id && !seen.has(id)) {
+                seen.add(id);
+                uniqueCompanions.push(companions);
+            }
+            if (uniqueCompanions.length >= limit) break;
+        }
+    }
+    return uniqueCompanions;
 }
 
 export const getUserSessions = async (userId: string, limit = 10) => {
