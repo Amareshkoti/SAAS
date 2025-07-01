@@ -32,25 +32,20 @@ const Page = async () => {
       </section>
       <section className="section">
         <h2 className="section-title">Recently completed sessions</h2>
-        <ScrollReveal>
-          <div className="recent-sessions-grid">
-            {recentSessionsCompanions.slice(0, 8).map((companion) => (
-              <Link href={`/companions/${companion.id || companion.$id}`} key={companion.id || companion.$id} className="recent-session-card-link">
-                <div className="recent-session-card animate-on-scroll">
-                  <div className="session-card-content">
-                    <div className="session-avatar" style={{ backgroundColor: getSubjectColor(companion.subject) }}>
-                      <img src={`/icons/${companion.subject}.svg`} alt={companion.subject} width={40} height={40} />
-                    </div>
-                    <div className="session-info">
-                      <div className="session-name">{companion.name}</div>
-                      <div className="session-topic">{companion.topic}</div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </ScrollReveal>
+        <div className="recent-sessions-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          {recentSessionsCompanions.slice(0, 9).map((companion) => (
+            <FlippableCompanionCard
+              key={companion.id || companion.$id}
+              id={companion.id || companion.$id}
+              name={companion.name}
+              topic={companion.topic}
+              subject={companion.subject}
+              duration={companion.duration}
+              color={getSubjectColor(companion.subject)}
+              bookmarked={!!companion.bookmarked}
+            />
+          ))}
+        </div>
       </section>
     </main>
   )

@@ -173,6 +173,8 @@ main {
   }
   .companions-grid {
     @apply flex flex-wrap gap-4 w-full max-md:justify-center justify-between;
+    padding-left: 16px;
+    padding-right: 16px;
   }
   .companion-card {
     @apply flex flex-col rounded-4xl border border-black px-4 py-4 gap-5 w-full min-lg:max-w-[410px] justify-between;
